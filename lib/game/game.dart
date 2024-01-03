@@ -158,12 +158,5 @@ class MyGame extends FlameGame with PanDetector, HasCollisionDetection {
   void endGame(bool playerWon) {
     isGameOver = true;
     onGameOver(playerWon);
-
-    if (playerWon) {
-      FlameAudio.play('lose.mp3');
-    } else {
-      FlameAudio.bgm.stop(); // Stop the BGM if the player wins
-      FlameAudio.play('lose.mp3');
-    }
   }
 }

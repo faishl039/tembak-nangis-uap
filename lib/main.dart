@@ -3,7 +3,7 @@ import 'package:flame_realtime_shooting/game/game.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:uuid/uuid.dart';
-// import 'package:auto_orientation/auto_orientation.dart';
+import 'package:flame_audio/flame_audio.dart';
 
 void main() async {
   await Supabase.initialize(
@@ -78,6 +78,8 @@ class _GamePageState extends State<GamePage> {
         } while (response == ChannelResponse.rateLimited && health <= 0);
       },
       onGameOver: (playerWon) async {
+        String audioFile = playerWon ? 'win.mp3' : 'lose.mp3';
+        FlameAudio.bgm.play(audioFile);
         await showDialog(
           barrierDismissible: false,
           context: context,
@@ -176,6 +178,8 @@ class _LobbyDialogState extends State<_LobbyDialog> {
   void initState() {
     super.initState();
 
+    FlameAudio.bgm.play('lobby.mp3');
+
     _lobbyChannel = supabase.channel(
       'lobby',
       opts: const RealtimeChannelConfig(self: true),
@@ -238,6 +242,8 @@ class _LobbyDialogState extends State<_LobbyDialog> {
                   setState(() {
                     _loading = true;
                   });
+
+                  FlameAudio.bgm.stop();
 
                   final opponentId =
                       _userids.firstWhere((userId) => userId != myUserId);
